@@ -3,25 +3,27 @@ import { InterfaceAbi } from "ethers";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 import { Address } from "viem";
 
-let provider: BrowserProvider;
-
-if (typeof window !== "undefined" && window?.ethereum) {
-  provider = new BrowserProvider(window.ethereum);
-}
-
 interface IGetTokenBalance {
   contractInformation: IContractInformation;
-  userAddress: Address;
 }
 
 export const getTokenBalance = async ({
   contractInformation,
-  userAddress,
-}: IGetTokenBalance) => {
+}: IGetTokenBalance): Promise<string> => {
+  const isWindowValid = typeof window !== "undefined" && window?.ethereum;
+  if (!isWindowValid) {
+    return "0.0";
+  }
+
+  const provider = new BrowserProvider(window.ethereum);
   const { address, abi } = contractInformation;
-  const contract = new Contract(address, abi, provider);
 
   try {
+    const contract = new Contract(address, abi, provider);
+
+    const signer = await provider.getSigner();
+    const userAddress = await signer.getAddress();
+
     const balance = await contract.balanceOf(userAddress);
 
     return formatUnits(balance, 18);
