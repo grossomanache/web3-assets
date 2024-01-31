@@ -2,12 +2,14 @@ import { InterfaceAbi } from "ethers";
 import { Address } from "viem";
 
 export interface IContractInformation {
+  symbol: string;
   address: Address;
   abi: InterfaceAbi;
 }
 
 export const contracts: Record<string, IContractInformation> = {
   zurf: {
+    symbol: "zrf",
     address: "0x232804231dE32551F13A57Aa3984900428aDf990",
     abi: [
       { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -180,7 +182,8 @@ export const contracts: Record<string, IContractInformation> = {
       },
     ],
   },
-  klt: {
+  kamaleont: {
+    symbol: "klt",
     address: "0xF87940f78F2f4d99A0c5c22e3fCC21795Cd53245",
     abi: [
       { inputs: [], stateMutability: "nonpayable", type: "constructor" },

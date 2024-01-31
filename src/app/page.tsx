@@ -1,14 +1,19 @@
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
-import { getTokenBalance } from "@/lib";
+import { getTokenBalance, getTokenPrice } from "@/lib";
 import { contracts } from "@/contracts";
 
 export default async function Home() {
-  const contractInformation = contracts["klt"];
+  const usedToken = "kamaleont";
+  const contractInformation = contracts[usedToken];
+
   const balance = await getTokenBalance({ contractInformation });
+  const tokenPrice = await getTokenPrice(usedToken);
 
   return (
     <>
-      <h1>Balance: {balance} KLT</h1>
+      <p>Balance: {balance} KLT</p>
+      <p>Price: {tokenPrice} KLT/USDT</p>
+      <p>Value: {Number(balance) * tokenPrice} USDT</p>
       <AtConnectButton />
     </>
   );

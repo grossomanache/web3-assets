@@ -1,7 +1,5 @@
 import { IContractInformation } from "@/contracts";
-import { InterfaceAbi } from "ethers";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
-import { Address } from "viem";
 
 interface IGetTokenBalance {
   contractInformation: IContractInformation;
@@ -31,4 +29,17 @@ export const getTokenBalance = async ({
     console.error("Error fetching token balance:", error);
     throw error;
   }
+};
+
+export const getTokenPrice = async (tokenId: string, currency?: string) => {
+  const usedCurrency = currency ?? "usd";
+  const apiRoute = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${usedCurrency}`;
+
+  const response = await fetch(apiRoute);
+  const data = await response.json();
+
+  const value = data[tokenId];
+  const price = value[usedCurrency];
+
+  return price;
 };
