@@ -13,7 +13,7 @@ if (!projectId) throw new Error("Project ID is not defined");
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
-  enableAnalytics: true, // Optional - defaults to your Cloud configuration
+  enableAnalytics: true,
 });
 
 interface IWeb3Modal {
