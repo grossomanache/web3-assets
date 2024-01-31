@@ -4,6 +4,7 @@ import { cookieStorage, createStorage } from "wagmi";
 import { mainnet, polygon, bsc } from "wagmi/chains";
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
+export const coinGeckoApi = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
 
 if (!projectId) throw new Error("Project ID is not defined");
 
