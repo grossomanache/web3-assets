@@ -8,7 +8,7 @@ interface IMlTableRow {
 }
 
 export const MlTableRow = ({ asset, className }: IMlTableRow) => {
-  const { id, label, balance, price, referenceCurrency } = asset;
+  const { id, label, balance, price, currency: referenceCurrency } = asset;
 
   if (typeof balance !== "number") {
     return (

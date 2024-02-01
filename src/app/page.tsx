@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const usedToken = "kamaleont";
-  const referenceCurrency = "usd";
+  const currency = "usd";
   const contractInformation = contracts[usedToken];
 
   const [balance, setBalance] = useState<number | undefined>(undefined);
@@ -16,9 +16,7 @@ export default function Home() {
 
   useEffect(() => {
     getTokenBalance(contractInformation).then((result) => setBalance(result));
-    getTokenPrice(usedToken, referenceCurrency).then((result) =>
-      setPrice(result)
-    );
+    getTokenPrice(usedToken, currency).then((result) => setPrice(result));
   }, [contractInformation]);
 
   const asset: IAssetInformation = {
@@ -26,7 +24,7 @@ export default function Home() {
     label: usedToken,
     balance,
     price,
-    referenceCurrency,
+    currency,
   };
 
   return (
