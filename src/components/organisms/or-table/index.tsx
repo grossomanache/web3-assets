@@ -6,7 +6,7 @@ export interface IAssetInformation {
   label: string;
   price: number;
   balance: number | undefined;
-  referenceCurrency: string;
+  currency: string;
 }
 
 interface IOrTable {
