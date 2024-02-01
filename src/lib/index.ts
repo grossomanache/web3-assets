@@ -1,20 +1,20 @@
 import { IContractInformation } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 
-interface IGetTokenBalance {
-  contractInformation: IContractInformation;
+let provider: BrowserProvider;
+const isWindowValid = typeof window !== "undefined" && window?.ethereum;
+if (isWindowValid) {
+  provider = new BrowserProvider(window?.ethereum);
 }
 
-export const getTokenBalance = async ({
-  contractInformation,
-}: IGetTokenBalance): Promise<string> => {
-  const isWindowValid = typeof window !== "undefined" && window?.ethereum;
-  if (!isWindowValid) {
-    return "0.0";
-  }
-
-  const provider = new BrowserProvider(window.ethereum);
+export const getTokenBalance = async (
+  contractInformation: IContractInformation
+): Promise<number | undefined> => {
   const { address, abi } = contractInformation;
+
+  if (!provider) {
+    return undefined;
+  }
 
   try {
     const contract = new Contract(address, abi, provider);
@@ -22,24 +22,38 @@ export const getTokenBalance = async ({
     const signer = await provider.getSigner();
     const userAddress = await signer.getAddress();
 
-    const balance = await contract.balanceOf(userAddress);
+    const balanceInWei = await contract.balanceOf(userAddress);
+    const balance = Number(formatUnits(balanceInWei, 18));
 
-    return formatUnits(balance, 18);
+    return balance;
   } catch (error) {
     console.error("Error fetching token balance:", error);
     throw error;
   }
 };
 
-export const getTokenPrice = async (tokenId: string, currency?: string) => {
-  const usedCurrency = currency ?? "usd";
+export const getTokenPrice = async (
+  tokenId: string,
+  referenceCurrency?: string
+) => {
+  const usedCurrency = referenceCurrency ?? "usd";
   const apiRoute = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${usedCurrency}`;
 
-  const response = await fetch(apiRoute);
-  const data = await response.json();
+  try {
+    const response = await fetch(apiRoute);
+    const data = await response.json();
 
-  const value = data[tokenId];
-  const price = value[usedCurrency];
+    const value = data[tokenId];
 
-  return price;
+    if (!value) {
+      throw new Error("Coingecko API failed. Please check your request");
+    }
+
+    const price = value[usedCurrency];
+
+    return price;
+  } catch (error) {
+    console.error("Error fetching token price:", error);
+    throw error;
+  }
 };
