@@ -1,12 +1,12 @@
 import clsx from "clsx";
 import { MlTableRow } from "./components/ml-table-row";
+import { ETokens } from "@/contracts";
 
 export interface IAssetInformation {
-  id: string;
-  label: string;
+  id: ETokens;
   price: number;
   balance: number | undefined;
-  currency: string;
+  currency?: string;
 }
 
 interface IOrTable {
