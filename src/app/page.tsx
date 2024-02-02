@@ -1,20 +1,9 @@
 "use client";
 
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
-import {
-  getNetworkId,
-  getTokenBalance,
-  getTokenData,
-  getTokenPrice,
-  provider,
-} from "@/lib";
-import {
-  ETokens,
-  IChainInformation,
-  chainIdToInformation,
-  contracts,
-} from "@/contracts";
-import { IAssetInformation, OrTable } from "@/components/organisms/or-table";
+import { getNetworkId, getTokenData, getUserAddress } from "@/lib";
+import { ETokens, chainIdToInformation } from "@/contracts";
+import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
 
 interface IAsset {
@@ -32,15 +21,19 @@ export default function Home() {
 
   useEffect(() => {
     setLoading(true);
-    getNetworkId().then((chainId) => setCurrentChain(chainId));
-    setLoading(false);
+    getNetworkId().then((chainId) => {
+      setCurrentChain(chainId);
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
     setLoading(true);
+    getUserAddress().then((newAddress) => console.log("newadress", newAddress));
     const tokens = chainIdToInformation[currentChain]?.tokens ?? [];
     tokens.forEach((tokenId) => {
       getTokenData(tokenId).then((data) => {
+        console.log("balance", data.balance);
         const { balance, price } = data;
         setAssets((assets) => [
           ...assets,

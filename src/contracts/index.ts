@@ -25,7 +25,6 @@ export interface IChainInformation {
 }
 
 export const chainIdToInformation: Record<number, IChainInformation> = {
-  1: { name: EChainName.Ethereum, tokens: [] },
   56: { name: EChainName.BNB, tokens: [ETokens.Kamaleont, ETokens.USDT] },
   137: { name: EChainName.Polygon, tokens: [ETokens.Zurf] },
 };

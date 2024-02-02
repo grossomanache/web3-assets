@@ -1,6 +1,8 @@
 import { ETokens, IContractInformation, contracts } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 
+const WEI_DECIMAL_PLACES = 18;
+
 export let provider: BrowserProvider;
 const isWindowValid = typeof window !== "undefined" && window?.ethereum;
 if (isWindowValid) {
@@ -23,6 +25,13 @@ export const getNetworkId = async () => {
   }
 };
 
+export const getUserAddress = async () => {
+  const signer = await provider.getSigner();
+  const userAddress = await signer.getAddress();
+
+  return userAddress;
+};
+
 export const getTokenBalance = async (
   contractInformation: IContractInformation
 ): Promise<number | undefined> => {
@@ -35,11 +44,10 @@ export const getTokenBalance = async (
   try {
     const contract = new Contract(address, abi, provider);
 
-    const signer = await provider.getSigner();
-    const userAddress = await signer.getAddress();
+    const userAddress = await getUserAddress();
 
     const balanceInWei = await contract.balanceOf(userAddress);
-    const balance = Number(formatUnits(balanceInWei, 18));
+    const balance = Number(formatUnits(balanceInWei, WEI_DECIMAL_PLACES));
 
     return balance;
   } catch (error) {
@@ -81,6 +89,7 @@ export const getTokenData = async (
   const price = await getTokenPrice(tokenId, referenceCurrency);
 
   const contractInformation = contracts[tokenId];
+  console.log(contractInformation);
   const balance = await getTokenBalance(contractInformation);
 
   return { price, balance };

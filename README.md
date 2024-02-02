@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1>web3 asset wallet </h1>
+<p>To see your assets, go to <a href="https://web3-assets.vercel.app/">web3-assets</a></p>
 
-## Getting Started
+<h2>Supported chains</h2>
 
-First, run the development server:
+<h3><img src="https://altcoinsbox.com/wp-content/uploads/2023/01/bnb-chain-binance-smart-chain-logo-600x600.webp" height="30" width="30"> BNB chain</h3>
+<ul>
+    <li>TetherUSD <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" height="20" width="20"></li>
+    <li>KLT <img src="https://assets.coingecko.com/coins/images/26386/large/Dise%C3%B1o_sin_t%C3%ADtulo_%288%29.png?1696525463" height="20" width="20"></li>
+</ul>
+
+<h3><img src="https://i.pinimg.com/originals/9b/1e/97/9b1e977d00b5d887608b156705a10759.png" height="30" width="30"> Polygon</h3>
+
+<ul>
+    <li>Zurf <img src="https://pbs.twimg.com/profile_images/1733327109265805312/xpKjWz6T_400x400.jpg" height="20" width="20"></li>
+</ul>
+
+## Local development
+
+To run locally:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 # or
 bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
