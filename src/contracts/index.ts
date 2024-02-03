@@ -17,16 +17,36 @@ export enum ETokens {
   Zurf = "zurf",
   Kamaleont = "kamaleont",
   USDT = "tether",
+  Chainlink = "link",
+}
+export enum ECurrency {
+  BNB = "binancecoin",
+  Polygon = "polygon-ecosystem-token",
+  Ethereum = "ethereum",
 }
 
 export interface IChainInformation {
   name: EChainName;
   tokens: ETokens[];
+  currency: { id: ECurrency; symbol: string };
 }
 
 export const chainIdToInformation: Record<number, IChainInformation> = {
-  56: { name: EChainName.BNB, tokens: [ETokens.Kamaleont, ETokens.USDT] },
-  137: { name: EChainName.Polygon, tokens: [ETokens.Zurf] },
+  1: {
+    name: EChainName.Ethereum,
+    currency: { id: ECurrency.Ethereum, symbol: "eth" },
+    tokens: [ETokens.Chainlink],
+  },
+  56: {
+    name: EChainName.BNB,
+    currency: { id: ECurrency.BNB, symbol: "bnb" },
+    tokens: [ETokens.Kamaleont, ETokens.USDT],
+  },
+  137: {
+    name: EChainName.Polygon,
+    currency: { id: ECurrency.Polygon, symbol: "matic" },
+    tokens: [ETokens.Zurf],
+  },
 };
 
 export const contracts: Record<ETokens, IContractInformation> = {
@@ -900,6 +920,170 @@ export const contracts: Record<ETokens, IContractInformation> = {
         payable: false,
         stateMutability: "nonpayable",
         type: "function",
+      },
+    ],
+  },
+  [ETokens.Chainlink]: {
+    address: "0x514910771af9ca656af840dff83e8264ecf986ca",
+    symbol: "link",
+    abi: [
+      {
+        constant: true,
+        inputs: [],
+        name: "name",
+        outputs: [{ name: "", type: "string" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        constant: false,
+        inputs: [
+          { name: "_spender", type: "address" },
+          { name: "_value", type: "uint256" },
+        ],
+        name: "approve",
+        outputs: [{ name: "", type: "bool" }],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        constant: true,
+        inputs: [],
+        name: "totalSupply",
+        outputs: [{ name: "", type: "uint256" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        constant: false,
+        inputs: [
+          { name: "_from", type: "address" },
+          { name: "_to", type: "address" },
+          { name: "_value", type: "uint256" },
+        ],
+        name: "transferFrom",
+        outputs: [{ name: "", type: "bool" }],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        constant: true,
+        inputs: [],
+        name: "decimals",
+        outputs: [{ name: "", type: "uint8" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        constant: false,
+        inputs: [
+          { name: "_to", type: "address" },
+          { name: "_value", type: "uint256" },
+          { name: "_data", type: "bytes" },
+        ],
+        name: "transferAndCall",
+        outputs: [{ name: "success", type: "bool" }],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        constant: false,
+        inputs: [
+          { name: "_spender", type: "address" },
+          { name: "_subtractedValue", type: "uint256" },
+        ],
+        name: "decreaseApproval",
+        outputs: [{ name: "success", type: "bool" }],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        constant: true,
+        inputs: [{ name: "_owner", type: "address" }],
+        name: "balanceOf",
+        outputs: [{ name: "balance", type: "uint256" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        constant: true,
+        inputs: [],
+        name: "symbol",
+        outputs: [{ name: "", type: "string" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        constant: false,
+        inputs: [
+          { name: "_to", type: "address" },
+          { name: "_value", type: "uint256" },
+        ],
+        name: "transfer",
+        outputs: [{ name: "success", type: "bool" }],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        constant: false,
+        inputs: [
+          { name: "_spender", type: "address" },
+          { name: "_addedValue", type: "uint256" },
+        ],
+        name: "increaseApproval",
+        outputs: [{ name: "success", type: "bool" }],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        constant: true,
+        inputs: [
+          { name: "_owner", type: "address" },
+          { name: "_spender", type: "address" },
+        ],
+        name: "allowance",
+        outputs: [{ name: "remaining", type: "uint256" }],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        payable: false,
+        stateMutability: "nonpayable",
+        type: "constructor",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          { indexed: true, name: "from", type: "address" },
+          { indexed: true, name: "to", type: "address" },
+          { indexed: false, name: "value", type: "uint256" },
+          { indexed: false, name: "data", type: "bytes" },
+        ],
+        name: "Transfer",
+        type: "event",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          { indexed: true, name: "owner", type: "address" },
+          { indexed: true, name: "spender", type: "address" },
+          { indexed: false, name: "value", type: "uint256" },
+        ],
+        name: "Approval",
+        type: "event",
       },
     ],
   },
