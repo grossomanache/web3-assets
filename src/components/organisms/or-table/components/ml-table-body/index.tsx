@@ -2,6 +2,7 @@ import { MlLoader } from "@/components/molecules/ml-loader";
 import { IAssetInformation } from "../..";
 import { MlTableRow } from "../ml-table-row";
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
+import { useAccount } from "wagmi";
 
 interface IMlTableBody {
   isLoading: boolean;
@@ -10,6 +11,8 @@ interface IMlTableBody {
 }
 
 export const MlTableBody = ({ isLoading, assets, className }: IMlTableBody) => {
+  const { chainId } = useAccount();
+
   if (isLoading) {
     return (
       <div className="flex justify-center py-6">
@@ -18,7 +21,7 @@ export const MlTableBody = ({ isLoading, assets, className }: IMlTableBody) => {
     );
   }
 
-  const isValidAssets = assets.length > 0;
+  const isValidAssets = assets.length > 0 && chainId !== 1;
   if (!isValidAssets) {
     return (
       <div className="flex flex-col items-center">

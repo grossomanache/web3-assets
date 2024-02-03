@@ -5,7 +5,7 @@ import { getTokenData } from "@/lib";
 import { ETokens, chainIdToInformation } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
-import { useAccount, useChainId, useClient } from "wagmi";
+import { useChainId } from "wagmi";
 
 interface IAsset {
   id: ETokens;
@@ -14,14 +14,13 @@ interface IAsset {
 }
 
 export default function Home() {
-  const usedToken = ETokens.USDT;
-
   const chainId = useChainId();
   const [assets, setAssets] = useState<IAsset[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
+
     const tokens = chainIdToInformation[chainId]?.tokens ?? [];
 
     const promises = tokens.map(async (tokenId) => {
@@ -40,7 +39,7 @@ export default function Home() {
       .finally(() => {
         setLoading(false); // Ensure loading is set to false after operations complete
       });
-  }, [chainId, usedToken]);
+  }, [chainId]);
 
   return (
     <section className="flex flex-col gap-y-8 items-center p-2">

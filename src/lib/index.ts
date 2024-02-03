@@ -4,13 +4,7 @@ import { getContract } from "viem";
 
 const WEI_DECIMAL_PLACES = 18;
 
-export let provider: BrowserProvider;
-const isWindowValid = typeof window !== "undefined" && window?.ethereum;
-if (isWindowValid) {
-  provider = new BrowserProvider(window?.ethereum);
-}
-
-export const getUserAddress = async () => {
+export const getUserAddress = async (provider: BrowserProvider) => {
   const signer = await provider.getSigner();
   const userAddress = await signer.getAddress();
 
@@ -22,14 +16,17 @@ export const getTokenBalance = async (
 ): Promise<number | undefined> => {
   const { address, abi } = contractInformation;
 
-  if (!provider) {
+  const isWindowValid = typeof window !== "undefined" && window?.ethereum;
+  if (!isWindowValid) {
     return undefined;
   }
+
+  const provider = new BrowserProvider(window?.ethereum);
 
   try {
     const contract = new Contract(address, abi, provider);
 
-    const userAddress = await getUserAddress();
+    const userAddress = await getUserAddress(provider);
 
     const balanceInWei = await contract.balanceOf(userAddress);
     const balance = Number(formatUnits(balanceInWei, WEI_DECIMAL_PLACES));
