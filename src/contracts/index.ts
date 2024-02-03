@@ -19,16 +19,34 @@ export enum ETokens {
   USDT = "tether",
   Chainlink = "link",
 }
+export enum ECurrency {
+  BNB = "binancecoin",
+  Polygon = "polygon-ecosystem-token",
+  Ethereum = "ethereum",
+}
 
 export interface IChainInformation {
   name: EChainName;
   tokens: ETokens[];
+  currency: { id: ECurrency; symbol: string };
 }
 
 export const chainIdToInformation: Record<number, IChainInformation> = {
-  1: { name: EChainName.Ethereum, tokens: [ETokens.Chainlink] },
-  56: { name: EChainName.BNB, tokens: [ETokens.Kamaleont, ETokens.USDT] },
-  137: { name: EChainName.Polygon, tokens: [ETokens.Zurf] },
+  1: {
+    name: EChainName.Ethereum,
+    currency: { id: ECurrency.Ethereum, symbol: "eth" },
+    tokens: [ETokens.Chainlink],
+  },
+  56: {
+    name: EChainName.BNB,
+    currency: { id: ECurrency.BNB, symbol: "bnb" },
+    tokens: [ETokens.Kamaleont, ETokens.USDT],
+  },
+  137: {
+    name: EChainName.Polygon,
+    currency: { id: ECurrency.Polygon, symbol: "matic" },
+    tokens: [ETokens.Zurf],
+  },
 };
 
 export const contracts: Record<ETokens, IContractInformation> = {

@@ -2,7 +2,7 @@
 
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
 import { getTokenData } from "@/lib";
-import { ETokens, chainIdToInformation } from "@/contracts";
+import { ETokens, chainIdToInformation, contracts } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
 import { useAccount, useChainId } from "wagmi";
@@ -11,6 +11,7 @@ interface IAsset {
   id: ETokens;
   price: number;
   balance: number;
+  symbol: string;
 }
 
 export default function Home() {
@@ -27,7 +28,8 @@ export default function Home() {
     const promises = tokens.map(async (tokenId) => {
       const tokenData = await getTokenData(tokenId);
       const { balance, price } = tokenData;
-      return { id: tokenId, price, balance: balance ?? 0 };
+      const { symbol } = contracts[tokenId];
+      return { id: tokenId, price, symbol, balance: balance ?? 0 };
     });
 
     Promise.all(promises)

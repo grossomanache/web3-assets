@@ -9,9 +9,7 @@ interface IMlTableRow {
 }
 
 export const MlTableRow = ({ asset, className }: IMlTableRow) => {
-  const { id, balance, price, currency: referenceCurrency } = asset;
-
-  const { symbol } = contracts[id];
+  const { id, balance, price, symbol, currency: referenceCurrency } = asset;
 
   const value = price * balance;
   const conversion = `${symbol}/${referenceCurrency ?? "USD"}`;
