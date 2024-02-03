@@ -7,6 +7,7 @@ import {
 } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 import { getContract } from "viem";
+import { getProvider } from "./utils";
 
 const WEI_DECIMAL_PLACES = 18;
 
@@ -20,14 +21,12 @@ export const getUserAddress = async (provider: BrowserProvider) => {
 export const getTokenBalance = async (
   contractInformation: IContractInformation
 ): Promise<number | undefined> => {
-  const { address, abi } = contractInformation;
-
-  const isWindowValid = typeof window !== "undefined" && window?.ethereum;
-  if (!isWindowValid) {
-    return undefined;
+  const provider = getProvider();
+  if (!provider) {
+    return;
   }
 
-  const provider = new BrowserProvider(window?.ethereum);
+  const { address, abi } = contractInformation;
 
   try {
     const contract = new Contract(address, abi, provider);
@@ -116,4 +115,11 @@ export const getTokenData = async (
   const balance = await getTokenBalance(contractInformation);
 
   return { price, balance };
+};
+
+export const getTokensData = async () => {
+  const provider = getProvider();
+  if (!provider) {
+    return;
+  }
 };
