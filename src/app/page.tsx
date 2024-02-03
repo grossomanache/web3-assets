@@ -1,12 +1,11 @@
 "use client";
 
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
-import { getNetworkId, getTokenData, getUserAddress } from "@/lib";
+import { getTokenData } from "@/lib";
 import { ETokens, chainIdToInformation } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
-import { MlLoader } from "@/components/molecules/ml-loader";
-import { useWeb3Modal } from "@web3modal/wagmi/react";
+import { useAccount, useChainId } from "wagmi";
 
 interface IAsset {
   id: ETokens;
@@ -15,29 +14,20 @@ interface IAsset {
 }
 
 export default function Home() {
-  const usedToken = ETokens.USDT;
+  const { chainId } = useAccount();
 
-  const [currentChain, setCurrentChain] = useState<number>(0);
   const [assets, setAssets] = useState<IAsset[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
-    getNetworkId().then((chainId) => {
-      setCurrentChain(chainId);
-      setLoading(false);
-    });
-  }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    const tokens = chainIdToInformation[currentChain]?.tokens ?? [];
+    const tokens = chainId ? chainIdToInformation?.[chainId]?.tokens : [];
 
-    const promises = tokens.map((tokenId) => {
-      return getTokenData(tokenId).then((data) => {
-        const { balance, price } = data;
-        return { id: tokenId, price, balance: balance ?? 0 };
-      });
+    const promises = tokens.map(async (tokenId) => {
+      const tokenData = await getTokenData(tokenId);
+      const { balance, price } = tokenData;
+      return { id: tokenId, price, balance: balance ?? 0 };
     });
 
     Promise.all(promises)
@@ -48,9 +38,9 @@ export default function Home() {
         console.error("Failed to load token data", error);
       })
       .finally(() => {
-        setLoading(false); // Ensure loading is set to false after operations complete
+        setLoading(false);
       });
-  }, [currentChain, usedToken]);
+  }, [chainId]);
 
   return (
     <section className="flex flex-col gap-y-8 items-center p-2">
