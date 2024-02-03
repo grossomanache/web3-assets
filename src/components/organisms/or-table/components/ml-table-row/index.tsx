@@ -29,13 +29,13 @@ export const MlTableRow = ({ asset, className }: IMlTableRow) => {
     <div className={clsx(className)}>
       <div className="name capitalize">{id}</div>
       <div className="price uppercase">
-        {price} {conversion}
+        {price.toFixed(4)} {conversion}
       </div>
       <div className="balance uppercase">
-        {balance} {symbol}
+        {balance.toFixed(2)} {symbol}
       </div>
       <div className="value uppercase">
-        ${value} {referenceCurrency}
+        ${value.toFixed(2)} {referenceCurrency}
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ import { getNetworkId, getTokenData, getUserAddress } from "@/lib";
 import { ETokens, chainIdToInformation } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
+import { MlLoader } from "@/components/molecules/ml-loader";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
 
 interface IAsset {
   id: ETokens;
@@ -29,25 +31,32 @@ export default function Home() {
 
   useEffect(() => {
     setLoading(true);
-    getUserAddress().then((newAddress) => console.log("newadress", newAddress));
     const tokens = chainIdToInformation[currentChain]?.tokens ?? [];
-    tokens.forEach((tokenId) => {
-      getTokenData(tokenId).then((data) => {
-        console.log("balance", data.balance);
+
+    const promises = tokens.map((tokenId) => {
+      return getTokenData(tokenId).then((data) => {
         const { balance, price } = data;
-        setAssets((assets) => [
-          ...assets,
-          { id: tokenId, price, balance: balance ?? 0 },
-        ]);
+        return { id: tokenId, price, balance: balance ?? 0 };
       });
     });
-    setLoading(false);
+
+    Promise.all(promises)
+      .then((assetsData) => {
+        setAssets(assetsData);
+      })
+      .catch((error) => {
+        console.error("Failed to load token data", error);
+      })
+      .finally(() => {
+        setLoading(false); // Ensure loading is set to false after operations complete
+      });
   }, [currentChain, usedToken]);
 
   return (
-    <section className="flex flex-col gap-y-8 items-center">
+    <section className="flex flex-col gap-y-8 items-center p-2">
       <AtConnectButton size="sm" className="flex self-end" />
-      <OrTable assets={assets} />
+      <h1>web3 assets</h1>
+      <OrTable assets={assets} isLoading={loading} />
     </section>
   );
 }
