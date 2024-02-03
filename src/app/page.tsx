@@ -5,7 +5,7 @@ import { getTokenData } from "@/lib";
 import { ETokens, chainIdToInformation } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
-import { useChainId } from "wagmi";
+import { useAccount, useChainId } from "wagmi";
 
 interface IAsset {
   id: ETokens;
@@ -14,14 +14,15 @@ interface IAsset {
 }
 
 export default function Home() {
-  const chainId = useChainId();
+  const { chainId } = useAccount();
+
   const [assets, setAssets] = useState<IAsset[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
 
-    const tokens = chainIdToInformation[chainId]?.tokens ?? [];
+    const tokens = chainId ? chainIdToInformation?.[chainId]?.tokens : [];
 
     const promises = tokens.map(async (tokenId) => {
       const tokenData = await getTokenData(tokenId);
@@ -37,7 +38,7 @@ export default function Home() {
         console.error("Failed to load token data", error);
       })
       .finally(() => {
-        setLoading(false); // Ensure loading is set to false after operations complete
+        setLoading(false);
       });
   }, [chainId]);
 
