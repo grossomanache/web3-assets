@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { IAssetInformation } from "../..";
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
+import { contracts } from "@/contracts";
 
 interface IMlTableRow {
   asset: IAssetInformation;
@@ -8,7 +9,7 @@ interface IMlTableRow {
 }
 
 export const MlTableRow = ({ asset, className }: IMlTableRow) => {
-  const { id, label, balance, price, currency: referenceCurrency } = asset;
+  const { id, balance, price, currency: referenceCurrency } = asset;
 
   if (typeof balance !== "number") {
     return (
@@ -19,20 +20,22 @@ export const MlTableRow = ({ asset, className }: IMlTableRow) => {
     );
   }
 
+  const { symbol } = contracts[id];
+
   const value = price * balance;
-  const conversion = `${id}/${referenceCurrency}`;
+  const conversion = `${symbol}/${referenceCurrency ?? "USD"}`;
 
   return (
     <div className={clsx(className)}>
-      <div className="name capitalize">{label}</div>
+      <div className="name capitalize">{id}</div>
       <div className="price uppercase">
-        {price} {conversion}
+        {price.toFixed(4)} {conversion}
       </div>
       <div className="balance uppercase">
-        {balance} {id}
+        {balance.toFixed(2)} {symbol}
       </div>
       <div className="value uppercase">
-        ${value} {referenceCurrency}
+        ${value.toFixed(2)} {referenceCurrency}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { config } from "@/config";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Web3Modal } from "@/context";
+import { OrFooter } from "@/components/organisms/or-footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: IDefaultChildren) {
       <body className={inter.className}>
         <Web3Modal initialState={initialState}>
           <main>{children}</main>
+          <OrFooter className="p-10 text-center" />
         </Web3Modal>
       </body>
     </html>

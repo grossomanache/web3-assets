@@ -1,36 +1,62 @@
 "use client";
 
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
-import { getTokenBalance, getTokenPrice } from "@/lib";
-import { contracts } from "@/contracts";
-import { IAssetInformation, OrTable } from "@/components/organisms/or-table";
+import { getNetworkId, getTokenData, getUserAddress } from "@/lib";
+import { ETokens, chainIdToInformation } from "@/contracts";
+import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
+import { MlLoader } from "@/components/molecules/ml-loader";
+import { useWeb3Modal } from "@web3modal/wagmi/react";
+
+interface IAsset {
+  id: ETokens;
+  price: number;
+  balance: number;
+}
 
 export default function Home() {
-  const usedToken = "kamaleont";
-  const currency = "usd";
-  const contractInformation = contracts[usedToken];
+  const usedToken = ETokens.USDT;
 
-  const [balance, setBalance] = useState<number | undefined>(undefined);
-  const [price, setPrice] = useState<number>(0);
+  const [currentChain, setCurrentChain] = useState<number>(0);
+  const [assets, setAssets] = useState<IAsset[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getTokenBalance(contractInformation).then((result) => setBalance(result));
-    getTokenPrice(usedToken, currency).then((result) => setPrice(result));
-  }, [contractInformation]);
+    setLoading(true);
+    getNetworkId().then((chainId) => {
+      setCurrentChain(chainId);
+      setLoading(false);
+    });
+  }, []);
 
-  const asset: IAssetInformation = {
-    id: contractInformation.symbol,
-    label: usedToken,
-    balance,
-    price,
-    currency,
-  };
+  useEffect(() => {
+    setLoading(true);
+    const tokens = chainIdToInformation[currentChain]?.tokens ?? [];
+
+    const promises = tokens.map((tokenId) => {
+      return getTokenData(tokenId).then((data) => {
+        const { balance, price } = data;
+        return { id: tokenId, price, balance: balance ?? 0 };
+      });
+    });
+
+    Promise.all(promises)
+      .then((assetsData) => {
+        setAssets(assetsData);
+      })
+      .catch((error) => {
+        console.error("Failed to load token data", error);
+      })
+      .finally(() => {
+        setLoading(false); // Ensure loading is set to false after operations complete
+      });
+  }, [currentChain, usedToken]);
 
   return (
-    <section className="flex flex-col gap-y-8 items-center">
+    <section className="flex flex-col gap-y-8 items-center p-2">
       <AtConnectButton size="sm" className="flex self-end" />
-      <OrTable assets={[asset]} />
+      <h1>web3 assets</h1>
+      <OrTable assets={assets} isLoading={loading} />
     </section>
   );
 }

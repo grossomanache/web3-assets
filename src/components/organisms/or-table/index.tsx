@@ -1,31 +1,36 @@
 import clsx from "clsx";
 import { MlTableRow } from "./components/ml-table-row";
+import { ETokens } from "@/contracts";
+import { MlTableHeader } from "./components/ml-table-header";
+import { MlLoader } from "@/components/molecules/ml-loader";
 
 export interface IAssetInformation {
-  id: string;
-  label: string;
+  id: ETokens;
   price: number;
   balance: number | undefined;
-  currency: string;
+  currency?: string;
 }
 
 interface IOrTable {
   assets: IAssetInformation[];
+  isLoading: boolean;
 }
 
-export const OrTable = ({ assets }: IOrTable) => {
+export const OrTable = ({ assets, isLoading }: IOrTable) => {
   const gridClassnames = "grid grid-cols-4 gap-x-2";
   return (
     <div className="asset-table table border-2 p-2 rounded-lg w-fit">
-      <div className={clsx(gridClassnames, "header border-b-2 row font-bold")}>
-        <div className="name">Asset</div>
-        <div className="price"> Price</div>
-        <div className="balance">Balance</div>
-        <div className="value">Value</div>
-      </div>
-      {assets.map((asset) => (
-        <MlTableRow key={asset.id} asset={asset} className={gridClassnames} />
-      ))}
+      <MlTableHeader className={gridClassnames} />
+      {isLoading ? (
+        <div className="flex justify-center py-6">
+          <MlLoader />
+        </div>
+      ) : (
+        assets.map((asset) => (
+          <MlTableRow key={asset.id} asset={asset} className={gridClassnames} />
+        ))
+      )}
+      {}
     </div>
   );
 };

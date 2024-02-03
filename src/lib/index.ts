@@ -1,11 +1,36 @@
-import { IContractInformation } from "@/contracts";
+import { ETokens, IContractInformation, contracts } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
 
-let provider: BrowserProvider;
+const WEI_DECIMAL_PLACES = 18;
+
+export let provider: BrowserProvider;
 const isWindowValid = typeof window !== "undefined" && window?.ethereum;
 if (isWindowValid) {
   provider = new BrowserProvider(window?.ethereum);
 }
+
+export const getNetworkId = async () => {
+  try {
+    const network = await provider.getNetwork();
+    const { chainId } = network;
+
+    if (!chainId) {
+      console.error("Non valid network");
+    }
+
+    return Number(chainId);
+  } catch (error) {
+    console.error("Error fetching network name:", error);
+    throw error;
+  }
+};
+
+export const getUserAddress = async () => {
+  const signer = await provider.getSigner();
+  const userAddress = await signer.getAddress();
+
+  return userAddress;
+};
 
 export const getTokenBalance = async (
   contractInformation: IContractInformation
@@ -19,11 +44,10 @@ export const getTokenBalance = async (
   try {
     const contract = new Contract(address, abi, provider);
 
-    const signer = await provider.getSigner();
-    const userAddress = await signer.getAddress();
+    const userAddress = await getUserAddress();
 
     const balanceInWei = await contract.balanceOf(userAddress);
-    const balance = Number(formatUnits(balanceInWei, 18));
+    const balance = Number(formatUnits(balanceInWei, WEI_DECIMAL_PLACES));
 
     return balance;
   } catch (error) {
@@ -33,7 +57,7 @@ export const getTokenBalance = async (
 };
 
 export const getTokenPrice = async (
-  tokenId: string,
+  tokenId: ETokens,
   referenceCurrency?: string
 ) => {
   const usedCurrency = referenceCurrency ?? "usd";
@@ -56,4 +80,16 @@ export const getTokenPrice = async (
     console.error("Error fetching token price:", error);
     throw error;
   }
+};
+
+export const getTokenData = async (
+  tokenId: ETokens,
+  referenceCurrency?: string
+) => {
+  const price = await getTokenPrice(tokenId, referenceCurrency);
+
+  const contractInformation = contracts[tokenId];
+  const balance = await getTokenBalance(contractInformation);
+
+  return { price, balance };
 };
