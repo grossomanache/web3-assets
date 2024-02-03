@@ -89,7 +89,6 @@ export const getTokenData = async (
   const price = await getTokenPrice(tokenId, referenceCurrency);
 
   const contractInformation = contracts[tokenId];
-  console.log(contractInformation);
   const balance = await getTokenBalance(contractInformation);
 
   return { price, balance };
