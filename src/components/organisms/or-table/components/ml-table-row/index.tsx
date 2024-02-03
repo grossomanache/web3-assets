@@ -11,7 +11,7 @@ interface IMlTableRow {
 export const MlTableRow = ({ asset, className }: IMlTableRow) => {
   const { id, balance, price, currency: referenceCurrency } = asset;
 
-  if (typeof balance !== "number") {
+  if (typeof balance !== "number" || !id) {
     return (
       <div>
         <p>Please connect a wallet to see your assets</p>

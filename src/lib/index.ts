@@ -1,5 +1,6 @@
 import { ETokens, IContractInformation, contracts } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
+import { getContract } from "viem";
 
 const WEI_DECIMAL_PLACES = 18;
 
@@ -8,22 +9,6 @@ const isWindowValid = typeof window !== "undefined" && window?.ethereum;
 if (isWindowValid) {
   provider = new BrowserProvider(window?.ethereum);
 }
-
-export const getNetworkId = async () => {
-  try {
-    const network = await provider.getNetwork();
-    const { chainId } = network;
-
-    if (!chainId) {
-      console.error("Non valid network");
-    }
-
-    return Number(chainId);
-  } catch (error) {
-    console.error("Error fetching network name:", error);
-    throw error;
-  }
-};
 
 export const getUserAddress = async () => {
   const signer = await provider.getSigner();
