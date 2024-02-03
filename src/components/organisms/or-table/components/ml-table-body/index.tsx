@@ -21,7 +21,7 @@ export const MlTableBody = ({ isLoading, assets, className }: IMlTableBody) => {
     );
   }
 
-  const isValidAssets = assets.length > 0 && chainId !== 1;
+  const isValidAssets = assets.length > 0 && chainId;
   if (!isValidAssets) {
     return (
       <div className="flex flex-col items-center">

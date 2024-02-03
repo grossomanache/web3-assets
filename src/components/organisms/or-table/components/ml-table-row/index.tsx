@@ -11,15 +11,6 @@ interface IMlTableRow {
 export const MlTableRow = ({ asset, className }: IMlTableRow) => {
   const { id, balance, price, currency: referenceCurrency } = asset;
 
-  if (typeof balance !== "number" || !id) {
-    return (
-      <div>
-        <p>Please connect a wallet to see your assets</p>
-        <AtConnectButton size="sm" />
-      </div>
-    );
-  }
-
   const { symbol } = contracts[id];
 
   const value = price * balance;

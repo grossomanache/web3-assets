@@ -8,7 +8,7 @@ import { MlTableBody } from "./components/ml-table-body";
 export interface IAssetInformation {
   id: ETokens;
   price: number;
-  balance: number | undefined;
+  balance: number;
   currency?: string;
 }
 
