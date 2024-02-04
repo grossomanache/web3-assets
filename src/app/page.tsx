@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 export default function Home() {
-  const { chainId } = useAccount();
+  const { chainId, address } = useAccount();
 
   const [assets, setAssets] = useState<IAsset[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export default function Home() {
     getAssetData(chainId, tokens)
       .then((data) => setAssets(data))
       .finally(() => setLoading(false));
-  }, [chainId]);
+  }, [address, chainId]);
 
   return (
     <section className="flex flex-col gap-y-8 items-center p-2">

@@ -28,7 +28,7 @@ export enum ETokens {
 }
 export enum ECurrencyId {
   BNB = "binancecoin",
-  Polygon = "polygon-ecosystem-token",
+  Polygon = "matic-network",
   Ethereum = "ethereum",
 }
 
