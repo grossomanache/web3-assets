@@ -19,7 +19,7 @@ export const MlTableRow = ({ asset, className }: IMlTableRow) => {
   const priceLabel = `${price.toFixed(4)} ${referenceCurrency}`;
   const mobilePriceLabel = `${price.toFixed(2)} ${referenceCurrency}`;
 
-  const subtitleClassName = "text-sm text-gray-400";
+  const subtitleClassName = "text-sm dark:text-gray-400 text-gray-600";
 
   return (
     <div className={clsx(className)}>
