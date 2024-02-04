@@ -36,7 +36,9 @@ export const MlTableBody = ({ isLoading, assets, className }: IMlTableBody) => {
     <>
       {assets.map((asset, index) => {
         const isOddNumber = index % 2 === 0;
-        const backgroundColor = isOddNumber ? "bg-gray-900" : "";
+        const backgroundColor = isOddNumber
+          ? "dark:bg-gray-800 bg-neutral-200"
+          : "";
         return (
           <MlTableRow
             key={asset.id}
