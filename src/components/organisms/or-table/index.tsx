@@ -13,9 +13,12 @@ interface IOrTable {
 }
 
 export const OrTable = ({ assets, isLoading }: IOrTable) => {
-  const balance = assets.reduce((accumulator, { balance }) => {
-    return accumulator + balance;
-  }, 0);
+  const isValidAssets = assets.length > 0;
+  const balance = isValidAssets
+    ? assets.reduce((accumulator, { balance }) => {
+        return accumulator + balance;
+      }, 0)
+    : undefined;
 
   const gridClassnames =
     "items-center grid grid-cols-2 md:grid-cols-4 gap-x-4 p-2";
