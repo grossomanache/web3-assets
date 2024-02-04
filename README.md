@@ -15,6 +15,12 @@
     <li>Zurf <img src="https://pbs.twimg.com/profile_images/1733327109265805312/xpKjWz6T_400x400.jpg" height="20" width="20"></li>
 </ul>
 
+<h3><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Ethereum_logo_2014.svg/1257px-Ethereum_logo_2014.svg.png" height="30" width="15"> Ethereum</h3>
+
+<ul>
+    <li>Chainlink <img src="https://cryptologos.cc/logos/chainlink-link-logo.png" height="20" width="20"></li>
+</ul>
+
 ## Local development
 
 To run locally:

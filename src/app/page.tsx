@@ -1,18 +1,11 @@
 "use client";
 
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
-import { getTokenData } from "@/lib";
-import { ETokens, chainIdToInformation, contracts } from "@/contracts";
+import { IAsset, getAssetData } from "@/lib";
+import { ETokens, chainIdToInformation } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
-import { useAccount, useChainId } from "wagmi";
-
-interface IAsset {
-  id: ETokens;
-  price: number;
-  balance: number;
-  symbol: string;
-}
+import { useAccount } from "wagmi";
 
 export default function Home() {
   const { chainId } = useAccount();
@@ -25,23 +18,9 @@ export default function Home() {
 
     const tokens = chainId ? chainIdToInformation?.[chainId]?.tokens : [];
 
-    const promises = tokens.map(async (tokenId) => {
-      const tokenData = await getTokenData(tokenId);
-      const { balance, price } = tokenData;
-      const { symbol } = contracts[tokenId];
-      return { id: tokenId, price, symbol, balance: balance ?? 0 };
-    });
-
-    Promise.all(promises)
-      .then((assetsData) => {
-        setAssets(assetsData);
-      })
-      .catch((error) => {
-        console.error("Failed to load token data", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    getAssetData(tokens)
+      .then((data) => setAssets(data))
+      .finally(() => setLoading(false));
   }, [chainId]);
 
   return (
