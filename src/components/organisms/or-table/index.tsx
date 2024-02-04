@@ -1,15 +1,12 @@
 import clsx from "clsx";
 import { MlTableRow } from "./components/ml-table-row";
-import { ETokens } from "@/contracts";
+import { ECurrencies, ETokens } from "@/contracts";
 import { MlTableHeader } from "./components/ml-table-header";
 import { MlLoader } from "@/components/molecules/ml-loader";
 import { MlTableBody } from "./components/ml-table-body";
+import { IAsset } from "@/lib";
 
-export interface IAssetInformation {
-  id: ETokens;
-  price: number;
-  symbol: string;
-  balance: number;
+export interface IAssetInformation extends IAsset {
   currency?: string;
 }
 

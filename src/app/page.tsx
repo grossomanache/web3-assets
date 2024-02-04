@@ -2,7 +2,7 @@
 
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
 import { IAsset, getAssetData } from "@/lib";
-import { ETokens, chainIdToInformation } from "@/contracts";
+import { chainIdToInformation } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -18,7 +18,7 @@ export default function Home() {
 
     const tokens = chainId ? chainIdToInformation?.[chainId]?.tokens : [];
 
-    getAssetData(tokens)
+    getAssetData(chainId, tokens)
       .then((data) => setAssets(data))
       .finally(() => setLoading(false));
   }, [chainId]);

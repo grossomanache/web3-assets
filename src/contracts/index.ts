@@ -14,13 +14,19 @@ export enum EChainName {
   Ethereum = "mainnet",
 }
 
+export enum ECurrencies {
+  BNB = "BNB",
+  Polygon = "Matic",
+  Ethereum = "Ether",
+}
+
 export enum ETokens {
   Zurf = "zurf",
   Kamaleont = "kamaleont",
   USDT = "tether",
   Chainlink = "link",
 }
-export enum ECurrency {
+export enum ECurrencyId {
   BNB = "binancecoin",
   Polygon = "polygon-ecosystem-token",
   Ethereum = "ethereum",
@@ -29,23 +35,31 @@ export enum ECurrency {
 export interface IChainInformation {
   name: EChainName;
   tokens: ETokens[];
-  currency: { id: ECurrency; symbol: string };
+  currency: { id: ECurrencyId; symbol: string; label: ECurrencies };
 }
 
 export const chainIdToInformation: Record<number, IChainInformation> = {
   1: {
     name: EChainName.Ethereum,
-    currency: { id: ECurrency.Ethereum, symbol: "eth" },
+    currency: {
+      id: ECurrencyId.Ethereum,
+      symbol: "eth",
+      label: ECurrencies.Ethereum,
+    },
     tokens: [ETokens.Chainlink],
   },
   56: {
     name: EChainName.BNB,
-    currency: { id: ECurrency.BNB, symbol: "bnb" },
+    currency: { id: ECurrencyId.BNB, symbol: "bnb", label: ECurrencies.BNB },
     tokens: [ETokens.Kamaleont, ETokens.USDT],
   },
   137: {
     name: EChainName.Polygon,
-    currency: { id: ECurrency.Polygon, symbol: "matic" },
+    currency: {
+      id: ECurrencyId.Polygon,
+      symbol: "matic",
+      label: ECurrencies.Polygon,
+    },
     tokens: [ETokens.Zurf],
   },
 };
