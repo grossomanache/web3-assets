@@ -7,7 +7,7 @@ import {
   contracts,
 } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
-import { getProvider, getWeb3Provider } from "./utils";
+import { initializeProvider } from "./utils";
 
 const WEI_DECIMAL_PLACES = 18;
 
@@ -75,13 +75,11 @@ export const getAssetData = async (
   tokenIds: ETokens[],
   referenceCurrency?: string
 ) => {
-  const browserProvider = getProvider();
-  const web3Provider = await getWeb3Provider();
-
-  const provider = web3Provider ?? browserProvider;
+  const provider = await initializeProvider();
 
   const isValidConnection = chainId && provider;
   if (!isValidConnection) {
+    console.error("No Ethereum provider available");
     return [];
   }
 

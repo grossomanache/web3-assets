@@ -2,7 +2,7 @@ import { EthereumProvider } from "@walletconnect/ethereum-provider";
 import { BrowserProvider } from "ethers";
 import { projectId } from "../config";
 
-export const getProvider = () => {
+const getMetaMaskProvider = () => {
   const isWindowValid = typeof window !== "undefined" && window?.ethereum;
   if (!isWindowValid) {
     return undefined;
@@ -12,7 +12,7 @@ export const getProvider = () => {
   return provider;
 };
 
-export const getWeb3Provider = async () => {
+const getWalletConnectProvider = async () => {
   const ethereumProvider = await EthereumProvider.init({
     projectId,
     showQrModal: true,
@@ -20,5 +20,15 @@ export const getWeb3Provider = async () => {
   });
 
   const provider = new BrowserProvider(ethereumProvider);
+  return provider;
+};
+
+export const initializeProvider = async () => {
+  let provider = getMetaMaskProvider();
+
+  if (!provider) {
+    provider = await getWalletConnectProvider();
+  }
+
   return provider;
 };

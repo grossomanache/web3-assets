@@ -7,7 +7,7 @@ interface IMlTableTitle {
 }
 
 export const MlTableTitle = ({ balance, className }: IMlTableTitle) => {
-  const balanceLabel = balance ? `- ${balance}USD` : "";
+  const balanceLabel = balance ? `- ${balance.toFixed(4)} USD` : "";
   return (
     <h2 className={clsx(className, "flex flex-row items-center")}>
       <Image src="/wallet.png" height={50} width={50} alt="wallet" />
