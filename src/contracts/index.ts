@@ -3,6 +3,7 @@ import { Address } from "viem";
 
 export interface IContractInformation {
   symbol: string;
+  logo: string;
   address: Address;
   abi: InterfaceAbi;
 }
@@ -52,6 +53,7 @@ export const chainIdToInformation: Record<number, IChainInformation> = {
 export const contracts: Record<ETokens, IContractInformation> = {
   [ETokens.Zurf]: {
     symbol: "zrf",
+    logo: "https://pbs.twimg.com/profile_images/1733327109265805312/xpKjWz6T_400x400.jpg",
     address: "0x232804231dE32551F13A57Aa3984900428aDf990",
     abi: [
       { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -226,6 +228,7 @@ export const contracts: Record<ETokens, IContractInformation> = {
   },
   [ETokens.Kamaleont]: {
     symbol: "klt",
+    logo: "https://pbs.twimg.com/profile_images/1733327109265805312/xpKjWz6T_400x400.jpg",
     address: "0xF87940f78F2f4d99A0c5c22e3fCC21795Cd53245",
     abi: [
       { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -643,6 +646,7 @@ export const contracts: Record<ETokens, IContractInformation> = {
   },
   [ETokens.USDT]: {
     symbol: "usdt",
+    logo: "https://cryptologos.cc/logos/tether-usdt-logo.png",
     address: "0x55d398326f99059fF775485246999027B3197955",
     abi: [
       {
@@ -925,6 +929,7 @@ export const contracts: Record<ETokens, IContractInformation> = {
   },
   [ETokens.Chainlink]: {
     address: "0x514910771af9ca656af840dff83e8264ecf986ca",
+    logo: "https://cryptologos.cc/logos/chainlink-link-logo.png",
     symbol: "link",
     abi: [
       {

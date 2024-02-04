@@ -6,7 +6,6 @@ import {
   contracts,
 } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
-import { getContract } from "viem";
 import { getProvider } from "./utils";
 
 const WEI_DECIMAL_PLACES = 18;
@@ -18,27 +17,27 @@ export const getUserAddress = async (provider: BrowserProvider) => {
   return userAddress;
 };
 
-export const getTokenBalance = async (
-  contractInformation: IContractInformation
-): Promise<number | undefined> => {
-  const provider = getProvider();
-  if (!provider) {
-    return;
-  }
+export const getTokenPrices = async (
+  tokenIds: (ETokens | ECurrency)[],
+  referenceCurrency?: string
+) => {
+  const usedCurrency = referenceCurrency ?? "usd";
 
-  const { address, abi } = contractInformation;
+  const ids = tokenIds.join(",");
+  const apiRoute = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=${usedCurrency}`;
 
   try {
-    const contract = new Contract(address, abi, provider);
+    const response = await fetch(apiRoute);
+    const data = await response.json();
 
-    const userAddress = await getUserAddress(provider);
+    const prices = tokenIds.reduce((acc, tokenId) => {
+      acc[tokenId] = data[tokenId]?.usd || 0;
+      return acc;
+    }, {} as { [key in ETokens | ECurrency]: number });
 
-    const balanceInWei = await contract.balanceOf(userAddress);
-    const balance = Number(formatUnits(balanceInWei, WEI_DECIMAL_PLACES));
-
-    return balance;
+    return prices;
   } catch (error) {
-    console.error("Error fetching token balance:", error);
+    console.error("Error fetching token prices:", error);
     throw error;
   }
 };
@@ -95,7 +94,7 @@ export const getNativeTokenData = async (
   const {
     currency: { id, symbol },
   } = chainIdToInformation[chainId];
-  const price = await getTokenPrice(id, referenceCurrency);
+  const price = await getTokenPrices([id], referenceCurrency);
 
   const balance = await getNativeBalance();
   if (typeof balance !== "number") {
@@ -105,21 +104,61 @@ export const getNativeTokenData = async (
   return { id, price, balance, symbol };
 };
 
-export const getTokenData = async (
-  tokenId: ETokens,
-  referenceCurrency?: string
-) => {
-  const price = await getTokenPrice(tokenId, referenceCurrency);
+export const getTokenBalance = async (
+  provider: BrowserProvider,
+  contractInformation: IContractInformation
+): Promise<number | undefined> => {
+  const { address, abi } = contractInformation;
 
-  const contractInformation = contracts[tokenId];
-  const balance = await getTokenBalance(contractInformation);
+  try {
+    const contract = new Contract(address, abi, provider);
 
-  return { price, balance };
+    const userAddress = await getUserAddress(provider);
+
+    const balanceInWei = await contract.balanceOf(userAddress);
+    const balance = Number(formatUnits(balanceInWei, WEI_DECIMAL_PLACES));
+
+    return balance;
+  } catch (error) {
+    console.error("Error fetching token balance:", error);
+    throw error;
+  }
 };
 
-export const getTokensData = async () => {
+export interface IAsset {
+  id: ETokens;
+  price: number;
+  balance: number;
+  symbol: string;
+}
+
+export const getAssetData = async (
+  tokenIds: ETokens[],
+  referenceCurrency?: string
+) => {
   const provider = getProvider();
   if (!provider) {
-    return;
+    return [];
   }
+
+  const prices = await getTokenPrices(tokenIds, referenceCurrency);
+
+  const promises = tokenIds.map(async (tokenId) => {
+    const price = prices[tokenId];
+
+    const contract = contracts[tokenId];
+    const balance = await getTokenBalance(provider, contract);
+
+    const { symbol } = contract;
+
+    return {
+      id: tokenId,
+      price,
+      symbol,
+      balance: balance ?? 0,
+    };
+  });
+
+  const data = await Promise.all(promises);
+  return data;
 };
