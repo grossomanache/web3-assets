@@ -7,7 +7,7 @@ import {
   contracts,
 } from "@/contracts";
 import { BrowserProvider, Contract, formatUnits } from "ethers";
-import { getProvider } from "./utils";
+import { getProvider, getWeb3Provider } from "./utils";
 
 const WEI_DECIMAL_PLACES = 18;
 
@@ -50,9 +50,10 @@ const getTokenBalance = async (
   const { address, abi } = contractInformation;
 
   try {
+    const userAddress = await getUserAddress(provider);
     const contract = new Contract(address, abi, provider);
 
-    const userAddress = await getUserAddress(provider);
+    console.log("contract", contract);
 
     const balanceInWei = await contract.balanceOf(userAddress);
     const balance = Number(formatUnits(balanceInWei, WEI_DECIMAL_PLACES));
@@ -76,7 +77,10 @@ export const getAssetData = async (
   tokenIds: ETokens[],
   referenceCurrency?: string
 ) => {
-  const provider = getProvider();
+  const browserProvider = getProvider();
+  const web3Provider = await getWeb3Provider();
+
+  const provider = web3Provider ?? browserProvider;
 
   const isValidConnection = chainId && provider;
   if (!isValidConnection) {
