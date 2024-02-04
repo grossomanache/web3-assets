@@ -26,7 +26,7 @@ export const MlTableBody = ({ isLoading, assets, className }: IMlTableBody) => {
   if (!isValidAssets) {
     return (
       <div className="flex flex-col items-center">
-        <p className="px-2 py-4">Please connect a wallet to see your assets</p>
+        <p className="px-6 py-4">Please connect a wallet to see your assets</p>
         <AtConnectButton size="sm" className="my-3" />
       </div>
     );
