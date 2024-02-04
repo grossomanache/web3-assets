@@ -3,7 +3,7 @@ import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { cookieStorage, createStorage } from "wagmi";
 import { mainnet, polygon, bsc } from "wagmi/chains";
 
-export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
+export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID ?? "";
 
 if (!projectId) throw new Error("Project ID is not defined");
 
