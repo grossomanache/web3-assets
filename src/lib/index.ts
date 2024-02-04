@@ -53,8 +53,6 @@ const getTokenBalance = async (
     const userAddress = await getUserAddress(provider);
     const contract = new Contract(address, abi, provider);
 
-    console.log("contract", contract);
-
     const balanceInWei = await contract.balanceOf(userAddress);
     const balance = Number(formatUnits(balanceInWei, WEI_DECIMAL_PLACES));
 
