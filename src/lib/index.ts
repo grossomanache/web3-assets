@@ -11,14 +11,14 @@ import { getProvider } from "./utils";
 
 const WEI_DECIMAL_PLACES = 18;
 
-export const getUserAddress = async (provider: BrowserProvider) => {
+const getUserAddress = async (provider: BrowserProvider) => {
   const signer = await provider.getSigner();
   const userAddress = await signer.getAddress();
 
   return userAddress;
 };
 
-export const getTokenPrices = async (
+const getTokenPrices = async (
   tokenIds: (ETokens | ECurrencyId)[],
   referenceCurrency?: string
 ) => {
@@ -43,7 +43,7 @@ export const getTokenPrices = async (
   }
 };
 
-export const getTokenBalance = async (
+const getTokenBalance = async (
   provider: BrowserProvider,
   contractInformation: IContractInformation
 ): Promise<number | undefined> => {
