@@ -3,6 +3,7 @@ import { IAssetInformation } from "../..";
 import { MlTableRow } from "../ml-table-row";
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
 import { useAccount } from "wagmi";
+import clsx from "clsx";
 
 interface IMlTableBody {
   isLoading: boolean;
@@ -21,7 +22,7 @@ export const MlTableBody = ({ isLoading, assets, className }: IMlTableBody) => {
     );
   }
 
-  const isValidAssets = assets.length > 0 && chainId !== 1;
+  const isValidAssets = assets.length > 0 && chainId;
   if (!isValidAssets) {
     return (
       <div className="flex flex-col items-center">
@@ -33,9 +34,19 @@ export const MlTableBody = ({ isLoading, assets, className }: IMlTableBody) => {
 
   return (
     <>
-      {assets.map((asset) => (
-        <MlTableRow key={asset.id} asset={asset} className={className} />
-      ))}
+      {assets.map((asset, index) => {
+        const isOddNumber = index % 2 === 0;
+        const backgroundColor = isOddNumber
+          ? "dark:bg-gray-800 bg-neutral-200"
+          : "";
+        return (
+          <MlTableRow
+            key={asset.id}
+            asset={asset}
+            className={clsx(className, backgroundColor)}
+          />
+        );
+      })}
     </>
   );
 };
