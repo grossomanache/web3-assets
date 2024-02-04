@@ -1,8 +1,4 @@
-import clsx from "clsx";
-import { MlTableRow } from "./components/ml-table-row";
-import { ECurrencies, ETokens } from "@/contracts";
 import { MlTableHeader } from "./components/ml-table-header";
-import { MlLoader } from "@/components/molecules/ml-loader";
 import { MlTableBody } from "./components/ml-table-body";
 import { IAsset } from "@/lib";
 
@@ -16,9 +12,10 @@ interface IOrTable {
 }
 
 export const OrTable = ({ assets, isLoading }: IOrTable) => {
-  const gridClassnames = "grid grid-cols-4 gap-x-2 p-2";
+  const gridClassnames =
+    "items-center grid grid-cols-2 md:grid-cols-4 gap-x-4 p-2";
   return (
-    <div className="asset-table table border-2 rounded-lg w-fit min-w-[700px]">
+    <div className="asset-table table border-2 rounded-lg w-fit">
       <MlTableHeader className={gridClassnames} />
       <MlTableBody
         isLoading={isLoading}
