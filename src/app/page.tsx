@@ -2,7 +2,7 @@
 
 import { AtConnectButton } from "@/components/atoms/at-connect-button";
 import { IAsset, getAssetData } from "@/lib";
-import { ETokens, chainIdToInformation } from "@/contracts";
+import { chainIdToInformation } from "@/contracts";
 import { OrTable } from "@/components/organisms/or-table";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
@@ -18,7 +18,7 @@ export default function Home() {
 
     const tokens = chainId ? chainIdToInformation?.[chainId]?.tokens : [];
 
-    getAssetData(tokens)
+    getAssetData(chainId, tokens)
       .then((data) => setAssets(data))
       .finally(() => setLoading(false));
   }, [chainId]);
@@ -26,7 +26,10 @@ export default function Home() {
   return (
     <section className="flex flex-col gap-y-8 items-center p-2">
       <AtConnectButton size="sm" className="flex self-end" />
-      <h1>web3 assets</h1>
+      <span className="place-self-start ml-6">
+        <h1>web3 assets</h1>
+        <h2>All of your crypto assets in a single place</h2>
+      </span>
       <OrTable assets={assets} isLoading={loading} />
     </section>
   );

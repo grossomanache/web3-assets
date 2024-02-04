@@ -1,5 +1,6 @@
 import {
-  ECurrency,
+  ECurrencies,
+  ECurrencyId,
   ETokens,
   IContractInformation,
   chainIdToInformation,
@@ -18,7 +19,7 @@ export const getUserAddress = async (provider: BrowserProvider) => {
 };
 
 export const getTokenPrices = async (
-  tokenIds: (ETokens | ECurrency)[],
+  tokenIds: (ETokens | ECurrencyId)[],
   referenceCurrency?: string
 ) => {
   const usedCurrency = referenceCurrency ?? "usd";
@@ -33,7 +34,7 @@ export const getTokenPrices = async (
     const prices = tokenIds.reduce((acc, tokenId) => {
       acc[tokenId] = data[tokenId]?.usd || 0;
       return acc;
-    }, {} as { [key in ETokens | ECurrency]: number });
+    }, {} as { [key in ETokens | ECurrencyId]: number });
 
     return prices;
   } catch (error) {
@@ -43,7 +44,7 @@ export const getTokenPrices = async (
 };
 
 export const getTokenPrice = async (
-  tokenId: ETokens | ECurrency,
+  tokenId: ETokens | ECurrencyId,
   referenceCurrency?: string
 ) => {
   const usedCurrency = referenceCurrency ?? "usd";
@@ -126,22 +127,35 @@ export const getTokenBalance = async (
 };
 
 export interface IAsset {
-  id: ETokens;
+  id: ETokens | ECurrencies;
   price: number;
   balance: number;
   symbol: string;
 }
 
 export const getAssetData = async (
+  chainId: number | undefined,
   tokenIds: ETokens[],
   referenceCurrency?: string
 ) => {
   const provider = getProvider();
-  if (!provider) {
+
+  const isValidConnection = chainId && provider;
+  if (!isValidConnection) {
     return [];
   }
 
-  const prices = await getTokenPrices(tokenIds, referenceCurrency);
+  const nativeCurrency = chainIdToInformation[chainId].currency;
+
+  const pricesToQuery = [...tokenIds, nativeCurrency.id];
+  const prices = await getTokenPrices(pricesToQuery, referenceCurrency);
+
+  const nativeCurrencyData = {
+    id: nativeCurrency.label,
+    price: prices[nativeCurrency.id],
+    symbol: nativeCurrency.label,
+    balance: 0,
+  };
 
   const promises = tokenIds.map(async (tokenId) => {
     const price = prices[tokenId];
@@ -159,6 +173,8 @@ export const getAssetData = async (
     };
   });
 
-  const data = await Promise.all(promises);
+  const promisesToResolve = [nativeCurrencyData, ...promises];
+
+  const data = await Promise.all(promisesToResolve);
   return data;
 };
