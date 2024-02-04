@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { IAssetInformation } from "../..";
-import { AtConnectButton } from "@/components/atoms/at-connect-button";
-import { contracts } from "@/contracts";
+import Image from "next/image";
 
 interface IMlTableRow {
   asset: IAssetInformation;
@@ -16,7 +15,10 @@ export const MlTableRow = ({ asset, className }: IMlTableRow) => {
 
   return (
     <div className={clsx(className)}>
-      <div className="name capitalize">{id}</div>
+      <div className="name capitalize flex flex-row">
+        <Image src={`/tokens/${id}.png`} height={10} width={30} alt={id} />
+        <p className="pl-2">{id}</p>
+      </div>
       <div className="price uppercase">
         {price.toFixed(4)} {conversion}
       </div>
