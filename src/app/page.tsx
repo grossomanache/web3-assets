@@ -19,7 +19,9 @@ export default function Home() {
     const tokens = chainId ? chainIdToInformation?.[chainId]?.tokens : [];
 
     getAssetData(chainId, tokens)
-      .then((data) => setAssets(data))
+      .then((data) => {
+        setAssets(data);
+      })
       .finally(() => setLoading(false));
   }, [address, chainId]);
 
