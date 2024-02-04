@@ -19,6 +19,8 @@ export const MlTableRow = ({ asset, className }: IMlTableRow) => {
   const priceLabel = `${price.toFixed(4)} ${referenceCurrency}`;
   const mobilePriceLabel = `${price.toFixed(2)} ${referenceCurrency}`;
 
+  const chainName = chain?.name ?? "";
+
   const subtitleClassName = "text-sm dark:text-gray-400 text-gray-600";
 
   return (
@@ -29,12 +31,12 @@ export const MlTableRow = ({ asset, className }: IMlTableRow) => {
           <p>{id}</p>
           <div className="flex flex-row items-center">
             <Image
-              src={`/chains/${chain?.name}.png`}
+              src={`/chains/${chainName}.png`}
               height={15}
               width={15}
               alt={id}
             />
-            <p className={subtitleClassName}>{chain?.name}</p>
+            <p className={clsx(subtitleClassName, "pl-1")}>{chainName}</p>
           </div>
         </span>
       </div>
