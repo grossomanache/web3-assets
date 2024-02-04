@@ -16,9 +16,9 @@ interface IOrTable {
 }
 
 export const OrTable = ({ assets, isLoading }: IOrTable) => {
-  const gridClassnames = "grid grid-cols-4 gap-x-2";
+  const gridClassnames = "grid grid-cols-4 gap-x-2 p-2";
   return (
-    <div className="asset-table table border-2 p-2 rounded-lg w-fit min-w-[700px]">
+    <div className="asset-table table border-2 rounded-lg w-fit min-w-[700px]">
       <MlTableHeader className={gridClassnames} />
       <MlTableBody
         isLoading={isLoading}

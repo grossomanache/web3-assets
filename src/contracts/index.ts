@@ -8,7 +8,7 @@ export interface IContractInformation {
   abi: InterfaceAbi;
 }
 
-export enum EChainName {
+enum EChainName {
   BNB = "bnb",
   Polygon = "matic",
   Ethereum = "mainnet",
@@ -32,7 +32,7 @@ export enum ECurrencyId {
   Ethereum = "ethereum",
 }
 
-export interface IChainInformation {
+interface IChainInformation {
   name: EChainName;
   tokens: ETokens[];
   currency: { id: ECurrencyId; symbol: string; label: ECurrencies };
